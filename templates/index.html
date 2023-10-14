@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Echo User Input</title>
+</head>
+<body>
+    <h1>Echo User Input</h1>
+
+    <p>This web application echoes user input. Please enter some text into the box below, and then click the "Submit!" button. Then your input will be displayed as text on the web page. </p>
+    <form method="post">
+        <input type="text" name="user_input">
+        <button type="submit">Submit!</button>
+    </form>
+    {% if user_input %}
+    <h2>You entered: {{ user_input }}</h2>
+    {% endif %}
+</body>
+</html>
+

@@ -1,19 +1,27 @@
-#!/usr/bin/env python3
+import os
+from flask import Flask, request, render_template
 
-from flask import Flask, request
+def get_project_root() -> str:
+    current_directory = os.path.dirname(os.path.abspath(__file__))
+    while current_directory != os.path.abspath(os.path.sep):
+        if '.project_root_marker' in os.listdir(current_directory):
+            return current_directory
+        current_directory = os.path.dirname(current_directory)
+    return None  # If no marker file is found, return None or raise an exception
 
-app = Flask(__name__)
+project_root = get_project_root()
 
-@app.route("/")
-def main():
-    return '''
-     <form action="/echo_user_input" method="POST">
-         <input name="user_input">
-         <input type="submit" value="Submit!">
-     </form>
-     '''
+webpage_template_dir = os.path.join(project_root, 'templates')
 
-@app.route("/echo_user_input", methods=["POST"])
-def echo_input():
-    input_text = request.form.get("user_input", "")
-    return "You entered: " + input_text
+app = Flask(__name__, template_folder=webpage_template_dir)
+
+@app.route("/", methods=["GET", "POST"])
+def index():
+    if request.method == "POST":
+        user_input = request.form.get("user_input")
+        return render_template("index.html", user_input=user_input)
+    return render_template("index.html", user_input="")
+
+if __name__ == "__main__":
+    app.run(debug=True)
+    
